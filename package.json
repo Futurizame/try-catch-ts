@@ -1,0 +1,21 @@
+{
+  "name": "try-catch-ts",
+  "version": "1.0.0",
+  "description": "ts first, error flow easily without try...catch",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/futurizame/try-catch-ts.git"
+  },
+  "keywords": [],
+  "author": "futurizame",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/futurizame/try-catch-ts/issues"
+  },
+  "homepage": "https://github.com/futurizame/try-catch-ts#readme",
+  "devDependencies": {
+    "typescript": "^4.9.5"
+  }
+}
