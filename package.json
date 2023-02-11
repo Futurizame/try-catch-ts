@@ -6,6 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
+    "clean": "rm -rf ./lib",
     "validate": "eslint . && prettier --check . && jest",
     "prepublishOnly": "npm run validate",
     "prepare": "npm run build"
