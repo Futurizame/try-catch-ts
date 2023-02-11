@@ -1,31 +1,31 @@
 /**
- * Pair utility type
+ * Result from calling tryFn
  */
-export type Pair<A, B> = [A, B];
+export type Result<T, E> = { data: T; error: E };
 
 /**
- * Result from calling tryFn, first value is a possible error, second value is a possible value
+ * Successful result returns data
  */
-export type Result<E = unknown, T = unknown> = Pair<E | undefined, T>;
+export type Successful<T> = Result<T, undefined>;
 
 /**
- * ErroneousResult result with error
+ * Erroneous result returns error
  */
-export type ErroneousResult<E, T> = Pair<E, T>;
+export type Erroneous<E> = Result<undefined, E>;
 
 /**
  * tryFn wraps fn param, if everything is ok, no error will be returned, otherwise error will be returned
  * @param fn async function
  */
-export const tryFn = async <E = unknown, T = unknown>(
+export const tryFn = async <T = unknown, E = unknown>(
   fn: () => Promise<T>
-): Promise<Result<E, T>> => {
+): Promise<Successful<T> | Erroneous<E>> => {
   try {
-    const result = await fn();
+    const data = await fn();
 
-    return [undefined, result];
+    return { data, error: undefined };
   } catch (error) {
-    return [error as E, undefined as T];
+    return { data: undefined, error: error as E };
   }
 };
 
@@ -33,26 +33,24 @@ export const tryFn = async <E = unknown, T = unknown>(
  * tryFn for synchronous fn param
  * @param fn sync function
  */
-export const tryFnSync = <E = unknown, T = unknown>(
+export const tryFnSync = <T = unknown, E = unknown>(
   fn: () => T
-): Result<E, T> => {
+): Successful<T> | Erroneous<E> => {
   try {
-    const result = fn();
+    const data = fn();
 
-    return [undefined, result];
+    return { data, error: undefined };
   } catch (error) {
-    return [error as E, undefined as T];
+    return { data: undefined, error: error as E };
   }
 };
 
 /**
  * util function to check if result have error
- * @param result
+ * @param result result from calling tryFn
  */
-export const isErroneous = <E, T>(
-  result: Result<E, T>
-): result is ErroneousResult<E, T> => {
-  const [err] = result;
-
-  return !!err;
+export const isErroneous = <T, E>(
+  result: Successful<T> | Erroneous<E>
+): result is Erroneous<E> => {
+  return !!result.error;
 };
