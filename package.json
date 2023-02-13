@@ -1,6 +1,6 @@
 {
   "name": "try-catch-ts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ts first, error flow easily without try...catch",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
