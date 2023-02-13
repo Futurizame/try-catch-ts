@@ -1,10 +1,10 @@
 /**
  * Result from calling tryFn
  */
-export type Result<T, E> = { data: T; error: E };
+export type Result<T, E> = { val: T; err: E };
 
 /**
- * Successful result returns data
+ * Successful result returns value
  */
 export type Successful<T> = Result<T, undefined>;
 
@@ -14,34 +14,34 @@ export type Successful<T> = Result<T, undefined>;
 export type Erroneous<E> = Result<undefined, E>;
 
 /**
- * tryFn wraps fn param, if everything is ok, no error will be returned, otherwise error will be returned
+ * tryFn wraps fn callback, if everything is ok, no error will be returned, otherwise error will be returned
  * @param fn async function
  */
 export const tryFn = async <T = unknown, E = unknown>(
   fn: () => Promise<T>
 ): Promise<Successful<T> | Erroneous<E>> => {
   try {
-    const data = await fn();
+    const val = await fn();
 
-    return { data, error: undefined };
+    return { val, err: undefined };
   } catch (error) {
-    return { data: undefined, error: error as E };
+    return { val: undefined, err: error as E };
   }
 };
 
 /**
- * tryFn for synchronous fn param
+ * tryFn for synchronous fn callback
  * @param fn sync function
  */
 export const tryFnSync = <T = unknown, E = unknown>(
   fn: () => T
 ): Successful<T> | Erroneous<E> => {
   try {
-    const data = fn();
+    const val = fn();
 
-    return { data, error: undefined };
+    return { val, err: undefined };
   } catch (error) {
-    return { data: undefined, error: error as E };
+    return { val: undefined, err: error as E };
   }
 };
 
@@ -52,5 +52,15 @@ export const tryFnSync = <T = unknown, E = unknown>(
 export const isErroneous = <T, E>(
   result: Successful<T> | Erroneous<E>
 ): result is Erroneous<E> => {
-  return !!result.error;
+  return !!result.err;
+};
+
+/**
+ * util function to check if result have value
+ * @param result result from calling tryFn
+ */
+export const isSuccessful = <T, E>(
+  result: Successful<T> | Erroneous<E>
+): result is Successful<T> => {
+  return !!result.val;
 };
