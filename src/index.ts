@@ -1,66 +1,47 @@
 /**
- * Result from calling tryFn
+ * Optional type with error as values.
+ * If ok is true, data is the result of the operation, otherwise error is the error thrown.
  */
-export type Result<T, E> = { val: T; err: E };
+export type Optional<D> =
+  | [ok: true, data: D, error: undefined]
+  | [ok: false, data: undefined, error: Error];
+
+const isError = (error: unknown): error is Error => {
+  return error instanceof Error;
+};
 
 /**
- * Successful result returns value
+ * tryFn is functional try-catch that returns an Optional type.
+ * @param fn function that returns a error throwable promise
  */
-export type Successful<T> = Result<T, undefined>;
-
-/**
- * Erroneous result returns error
- */
-export type Erroneous<E> = Result<undefined, E>;
-
-/**
- * tryFn wraps fn callback, if everything is ok, no error will be returned, otherwise error will be returned
- * @param fn async function
- */
-export const tryFn = async <T = unknown, E = unknown>(
-  fn: () => Promise<T>
-): Promise<Successful<T> | Erroneous<E>> => {
+export const tryFn = async <D>(fn: () => Promise<D>): Promise<Optional<D>> => {
   try {
-    const val = await fn();
+    const result = await fn();
 
-    return { val, err: undefined };
+    return [true, result, undefined];
   } catch (error) {
-    return { val: undefined, err: error as E };
+    if (isError(error)) {
+      return [false, undefined, error];
+    }
+
+    return [false, undefined, new Error(String(error))];
   }
 };
 
 /**
- * tryFn for synchronous fn callback
- * @param fn sync function
+ * tryFnSync is functional try-catch that returns an Optional type.
+ * @param fn error throwable function
  */
-export const tryFnSync = <T = unknown, E = unknown>(
-  fn: () => T
-): Successful<T> | Erroneous<E> => {
+export const tryFnSync = <D>(fn: () => D): Optional<D> => {
   try {
-    const val = fn();
+    const result = fn();
 
-    return { val, err: undefined };
+    return [true, result, undefined];
   } catch (error) {
-    return { val: undefined, err: error as E };
+    if (isError(error)) {
+      return [false, undefined, error];
+    }
+
+    return [false, undefined, new Error(String(error))];
   }
-};
-
-/**
- * util function to check if result have error
- * @param result result from calling tryFn
- */
-export const isErroneous = <T, E>(
-  result: Successful<T> | Erroneous<E>
-): result is Erroneous<E> => {
-  return !!result.err;
-};
-
-/**
- * util function to check if result have value
- * @param result result from calling tryFn
- */
-export const isSuccessful = <T, E>(
-  result: Successful<T> | Erroneous<E>
-): result is Successful<T> => {
-  return !!result.val;
 };

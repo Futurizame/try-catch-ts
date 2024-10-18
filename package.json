@@ -1,15 +1,14 @@
 {
   "name": "try-catch-ts",
-  "version": "1.1.0",
-  "description": "ts first, error flow easily without try...catch",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "version": "2.0.0",
+  "description": "Error as value try catch wrapper",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "clean": "rm -rf ./lib",
-    "validate": "eslint . && prettier --check . && jest",
-    "prepublishOnly": "npm run validate",
-    "prepare": "npm run build"
+    "clean": "rm -rf dist",
+    "validate": "prettier --check .",
+    "prepare": "npm run validate && npm run clean && npm run build"
   },
   "repository": {
     "type": "git",
@@ -28,17 +27,10 @@
   },
   "homepage": "https://github.com/futurizame/try-catch-ts#readme",
   "devDependencies": {
-    "@types/jest": "^29.4.0",
-    "@typescript-eslint/eslint-plugin": "^5.51.0",
-    "@typescript-eslint/parser": "^5.51.0",
-    "eslint": "^8.34.0",
-    "eslint-config-prettier": "^8.6.0",
-    "jest": "^29.4.2",
     "prettier": "^2.8.4",
-    "ts-jest": "^29.0.5",
     "typescript": "^4.9.5"
   },
   "files": [
-    "dist/**/*"
+    "dist"
   ]
 }
