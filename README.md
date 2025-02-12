@@ -11,34 +11,18 @@ npm i try-catch-ts
 ## Usage
 
 ```js
-import { tryFn } from "try-catch-ts";
+const response = await tryFn<{ name: string }>(async () => {
+  const result = await fetch("https://pokeapi.co/api/v2/pokemon/ditto");
+  return await result.json();
+});
 
-const main = async () => {
-  const [ok, data, error] = await tryFn(() => axios.get("https://pokeapi.co/api/v2/pokemon/ditto"));
+if (!response.ok) {
+  console.log(response.error.message);
 
-  if (!ok) {
-    console.error(error);
+  return;
+}
 
-    return;
-  }
-
-  const { name } = data;
-};
-```
-
-```js
-import { tryFn } from "try-catch-ts";
-
-const getPokemon = async () => {
-  const [ok, data, error] = await tryFn(() => axios.get("https://pokeapi.co/api/v2/pokemon/ditto"));
-
-  if (ok) {
-    return data.name;
-  }
-
-  // do something with error
-  const { message } = error;
-};
+console.log(response.data.name);
 ```
 
 ## License
